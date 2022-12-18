@@ -3,8 +3,28 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from .models import User, Listing
+from .forms import NewListingForm
 
-from .models import User
+def new_listing(request):
+    if request.method == "POST":
+        #extract form submitted by user
+        form = NewListingForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            #add owner_id to the form
+            instance.owner_id = request.user
+            #save form to database
+            instance.save()
+            return render(request, "auctions/index.html") 
+        else:
+            return new_listing(request)
+   
+    else:
+        form = NewListingForm()
+        context = {'form': form}
+        return render(request, "auctions/new_listing.html", context)
+
 
 
 def index(request):

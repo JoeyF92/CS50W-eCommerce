@@ -1,3 +1,23 @@
 body {
-    padding: 10px;
+    padding: 40px;
+  
+    
+}
+
+form{
+    display: block;
+    width: 40rem;
+    margin: auto;
+    text-align: center;
+    
+}
+
+form > input {
+    margin: 1rem auto 1rem auto;
+    display: block;
+    }
+
+form > select{
+    margin: 1rem auto 1rem auto;
+    display: block;
 }

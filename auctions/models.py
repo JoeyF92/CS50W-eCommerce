@@ -17,13 +17,13 @@ class Category(models.Model):
 class Listing(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=300)
-    image = models.CharField(max_length=100, validators=[RegexValidator(regex="([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)")], help_text="Optional- please use urls with jpg, png or jpeg format")
+    image = models.CharField(max_length=100, validators=[RegexValidator(regex="([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)")], blank=True)
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2 , default=0, validators=[MinValueValidator(0)])
     #starting_bid = models.FloatField(validators=[MinValueValidator(0), DecimalValidator(10000000, 2)], default=0)
     date = models.DateTimeField(auto_now_add=True)
-    is_Active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     winner_id = models.IntegerField(blank=True, null=True)
-    owner_Id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="sellerListings")
+    owner_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="sellerListings")
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, related_name="categoryListings")
     def __str__(self):
         return f"{self.name} (id:{self.id})"
