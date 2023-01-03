@@ -9,7 +9,7 @@ class NewListingForm(ModelForm):
         fields = '__all__'
         exclude = ['owner_id', 'winner_id', 'is_active']
         widgets = {            
-            'name': TextInput(attrs={
+            'title': TextInput(attrs={
                 'class': "form-control",
                 'style': 'max-width: 400px;',
                 

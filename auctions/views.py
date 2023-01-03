@@ -11,6 +11,7 @@ def new_listing(request):
         #extract form submitted by user
         form = NewListingForm(request.POST)
         if form.is_valid():
+            #Saving with commit=False gets you a model object, then you can add your extra data and save it.
             instance = form.save(commit=False)
             #add owner_id to the form
             instance.owner_id = request.user
