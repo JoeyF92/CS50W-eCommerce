@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -6,6 +7,7 @@ from django.urls import reverse
 from .models import User, Listing
 from .forms import NewListingForm
 
+@login_required
 def new_listing(request):
     if request.method == "POST":
         #extract form submitted by user
@@ -20,16 +22,16 @@ def new_listing(request):
             return render(request, "auctions/index.html") 
         else:
             return new_listing(request)
-   
     else:
         form = NewListingForm()
         context = {'form': form}
         return render(request, "auctions/new_listing.html", context)
 
-
-
+@login_required
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = Listing.objects.all()
+    context = {'listings': listings}
+    return render(request, "auctions/index.html", context)
 
 
 def login_view(request):

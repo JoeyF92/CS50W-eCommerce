@@ -123,3 +123,6 @@ STATIC_URL = '/static/'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# where to redirect if the login authenticator fails
+LOGIN_URL = '/login'

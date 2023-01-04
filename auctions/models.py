@@ -26,7 +26,7 @@ class Listing(models.Model):
     owner_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="sellerListings")
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, related_name="categoryListings")
     def __str__(self):
-        return f"{self.name} (id:{self.id})"
+        return f"{self.title} (id:{self.id})"
 
 class Bid(models.Model):
     bid_amount =  models.DecimalField(max_digits=10, decimal_places=2 , default=0, validators=[MinValueValidator(0.01)])
