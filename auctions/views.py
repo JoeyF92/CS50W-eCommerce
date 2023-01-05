@@ -4,8 +4,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, Listing
-from .forms import NewListingForm
+from .models import User, Listing, Bid
+from .forms import NewListingForm, NewBidForm
 
 @login_required
 def new_listing(request):
@@ -27,11 +27,44 @@ def new_listing(request):
         context = {'form': form}
         return render(request, "auctions/new_listing.html", context)
 
-@login_required
 def index(request):
     listings = Listing.objects.all()
     context = {'listings': listings}
     return render(request, "auctions/index.html", context)
+
+@login_required
+def listing(request, listing_id):
+    if request.method == "POST":
+        #extract bid submitted by user
+        form = NewBidForm(request.POST)
+        if form.is_valid():
+            print(form)
+            #Saving with commit=False to get model object- and then appending the extra data
+            instance = form.save(commit=False)
+            print(request.POST)
+            print(request.user.id)
+            print("hello")
+            print(instance)
+            #add user_id and listing_id to the form
+            instance.user_id = request.user
+            instance.listing_id = listing_id
+            print(instance)
+            #save form to database
+            #instance.save()
+
+        else:
+            return HttpResponseRedirect('/listing/' + listing_id)
+
+    else:
+        #filter the listings model for the id, use distinct to get the values as a dict
+        listing = Listing.objects.filter(id=listing_id).values().distinct()
+        context = {'listing': listing[0]}
+        #add the user bid form to the context
+        form = NewBidForm()
+        context['form'] = form
+        return render(request, "auctions/listing.html", context)
+
+
 
 
 def login_view(request):

@@ -1,3 +1,9 @@
+.created-text {
+  font-size: 0.8rem;
+  font-weight: lighter;
+  color: #8d8d8d;
+}
+
 body {
   padding: 40px;
   background-color: white;
@@ -27,17 +33,19 @@ form > select {
   padding: 1.5rem;
   display: flex;
   height: 14rem;
+  width: 80%;
 }
 
 .listing-left {
   padding-right: 1rem;
   height: 10rem;
-  width: 30%;
+  width: 14rem;
+  max-width: 30%;
   text-align: center;
+  overflow: hidden;
 }
 .listing-left img {
   height: 100%;
-  width: auto;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 5%;
@@ -45,5 +53,26 @@ form > select {
 
 .listing-right {
   width: auto;
+  width: 16rem;
+  max-width: 70%;
   padding-left: 3rem;
+}
+
+.listed {
+  width: 80vw;
+}
+.listed img {
+  max-height: 20rem;
+  max-width: 100%;
+}
+
+.bid {
+  text-align: left;
+}
+.bid form {
+  text-align: left;
+  margin-left: 0;
+}
+.bid input {
+  width: 100%;
 }/*# sourceMappingURL=styles.css.map */

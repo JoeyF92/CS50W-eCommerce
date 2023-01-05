@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput
-from auctions.models import Listing
+from auctions.models import Listing, Bid
 
 
 
@@ -27,11 +27,9 @@ class NewListingForm(ModelForm):
             
         }
 
-
-        #form = NewTaskForm(request.POST)
-       # if form.is_valid():
-
-        # If the form is invalid, re-render the page with existing information.
-       #     return render(request, "tasks/add.html", {
-      #          "form": form
-       #     })
+class NewBidForm(ModelForm):
+    class Meta:
+        model = Bid
+        fields = '__all__'
+        exclude = ['user_id', 'listing_id', 'Timestamp']
+   
