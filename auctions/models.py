@@ -19,7 +19,6 @@ class Listing(models.Model):
     description = models.TextField(max_length=300)
     image = models.CharField(max_length=100, validators=[RegexValidator(regex="([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)")], blank=True)
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2 , default=0, validators=[MinValueValidator(0)])
-    #starting_bid = models.FloatField(validators=[MinValueValidator(0), DecimalValidator(10000000, 2)], default=0)
     date = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     winner_id = models.IntegerField(blank=True, null=True)
@@ -37,11 +36,12 @@ class Bid(models.Model):
         return f"{self.bid_amount} by {self.user_id} on {self.listing_id}"
 
 class Comment(models.Model):
-    text = models.TextField(max_length=300)
+    comment = models.TextField(max_length=300)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userComments")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listingComments")
+    Timestamp = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return f"Comment:{self.id} by {self.user_id} on {self.listing_id}"
+        return f"Comment:{self.comment} by {self.user_id} on {self.listing_id}"
 
 
 class Watchlist(models.Model):

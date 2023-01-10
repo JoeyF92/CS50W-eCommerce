@@ -47,5 +47,10 @@
 
 </div>
 
+<form action={% url 'comments' listing_id=listing.id %} method="post">
+    {% csrf_token %}
+    {{comment_form}}
+    <button type="submit">Comment</button>
+</form>
 
 {% endblock %}

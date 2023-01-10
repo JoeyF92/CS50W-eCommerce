@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import User, Listing, Bid, Watchlist
-from .forms import NewListingForm, NewBidForm
+from .forms import NewListingForm, NewBidForm, CommentForm
 
 @login_required
 def new_listing(request):
@@ -58,6 +58,7 @@ def listing(request, listing_id):
             else:
                 #extract users bid as a new bid form
                 form = NewBidForm(request.POST)
+                print(form)
                 if form.is_valid():
                     #Saving with commit=False to get model object- and then appending the extra data
                     instance = form.save(commit=False)
@@ -109,7 +110,9 @@ def listing(request, listing_id):
             context['watched'] = watched
         #add the user bid form to the context
         form = NewBidForm()
+        comment_form = CommentForm()
         context['form'] = form
+        context['comment_form'] = comment_form
         return render(request, "auctions/listing.html", context)
 
 
@@ -139,8 +142,25 @@ def watch(request, listing_id):
 @login_required
 def comments(request, listing_id):
     if request.method == "POST":
-        #add to models - create the form and put it on the page
-        #extract comment
+        #extract comment form submitted by user
+        form = CommentForm(request.POST)
+        print(form)
+        if form.is_valid():
+            #Saving with commit=False, so we can add to the model instance
+            instance = form.save(commit=False)
+            #add owner and listing to the commentform
+            instance.user = request.user
+            instance.listing = Listing.objects.get(pk=listing_id)
+            #instance.save()
+            messages.success(request, "Comment Added")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.error(request, "Error with comment submission")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+
+
         #extract listing
         #insert into comments database
         #redierecrt

@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput
-from auctions.models import Listing, Bid
+from auctions.models import Listing, Bid, Comment
 
 
 
@@ -32,4 +32,11 @@ class NewBidForm(ModelForm):
         model = Bid
         fields = '__all__'
         exclude = ['user', 'listing', 'Timestamp']
-   
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        exclude = ['user', 'listing', 'Timestamp']
+        
