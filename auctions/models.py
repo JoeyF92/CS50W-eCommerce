@@ -30,22 +30,22 @@ class Listing(models.Model):
 
 class Bid(models.Model):
     bid_amount =  models.DecimalField(max_digits=10, decimal_places=2 , default=0, validators=[MinValueValidator(0.01)])
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userBid")
-    listing_id = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listingBid")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userBid")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listingBid")
     Timestamp = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"{self.bid_amount} by {self.user_id} on {self.listing_id}"
 
 class Comment(models.Model):
-    description = models.TextField(max_length=300)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userComments")
-    listing_id = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listingComments")
+    text = models.TextField(max_length=300)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userComments")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listingComments")
     def __str__(self):
         return f"Comment:{self.id} by {self.user_id} on {self.listing_id}"
 
 
 class Watchlist(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userWatching")
-    listing_id = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listingWatchers")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userWatching")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listingWatchers")
     def __str__(self):
         return f"{self.user_id} watching {self.listing_id}"

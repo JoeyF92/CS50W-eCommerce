@@ -31,5 +31,5 @@ class NewBidForm(ModelForm):
     class Meta:
         model = Bid
         fields = '__all__'
-        exclude = ['user_id', 'listing_id', 'Timestamp']
+        exclude = ['user', 'listing', 'Timestamp']
    

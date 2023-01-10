@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class={{message.tags}}>
+            {{message}}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<h3> Your watched items </h3>
+
+{% for listing in listings reversed  %}
+    
+    {% if listing.is_active == True %}
+        <div class="listing-box">
+            <div class="listing-left">
+                {% if listing.image != "" %}
+                    <img src="{{listing.image}}" alt="image of {{listing.title}}">
+                {% else %}
+                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.GhK0xqhcPT0DVriwmC4wOAHaHa%26pid%3DApi&f=1&ipt=c5cf3b950e88b3b956d61bc4824812e7b2e17fc237cdf68b5b92178d407b2a47&ipo=images.jpg" alt="image of {{listing.title}}">
+                {% endif %}
+            </div>
+            <div class="listing-right">
+                <h3> {{listing.title}} </h3>
+                <form action="{% url 'watch' listing_id=listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{listing}}">
+                    <button type="submit" name="unwatch"> Unwatch </button>
+                </form>
+                <a href="{% url 'listing' listing_id=listing.id %}"> {{listing.title}} </a>
+                <p> Current Price: $ </p>
+                <p class="created-text"> Created: {{listing.date}} </p>
+                
+                
+            </div>
+        </div>
+    {% endif %}
+{% endfor %} 
+
+{% endblock %}

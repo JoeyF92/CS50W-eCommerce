@@ -4,6 +4,55 @@
     color: #8d8d8d;
 }
 
+%message-bar{
+    display: block;
+    visibility: hidden;
+    width: 100%;
+    height: 2rem;
+    text-align: center;
+    animation: message-hide 10s linear 0.5s 1 normal forwards;
+}
+
+.error{
+    background-color: rgba(253, 3, 3, 0.486);
+    @extend %message-bar;
+}
+
+.success{
+    background-color: rgba(11, 247, 11, 0.521);
+    @extend %message-bar;
+}
+
+.info{
+    background-color: rgba(47, 11, 247, 0.521);
+    @extend %message-bar;
+}
+
+@keyframes message-hide {
+    0% {
+        opacity: 0;
+    }
+    2%{
+        visibility: visible;
+        opacity: 1;
+    }
+    4%{
+        visibility: visible;
+        opacity: 0;
+    }
+    6%{
+        visibility: visible;
+        opacity: 1;
+    }
+    80%{
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+  }
+
 
 
 
@@ -67,7 +116,7 @@ form > select{
 }
 
 .created-text{
-    @extend %minor-text
+    @extend %minor-text;
 }
 
 .listed
