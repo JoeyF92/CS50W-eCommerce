@@ -143,3 +143,58 @@ form > select{
     }
 
 }
+
+.all-comments{
+    margin-top: 2rem;
+    text-align: left;
+    width: 60vw;
+
+    form{
+        width: 95%;
+        height: 10px;
+        margin-left: 0;
+        position: relative;
+
+        #id_comment{
+            padding-right: 1rem;
+        }
+
+        button{
+            color: blue;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+    
+    #id_comment{
+        width: 100%;
+    }
+    .comment-group{
+
+        width: 60vw;
+        .comment-time{
+            font-size: 0.6rem;
+            color: #8d8d8d;
+            color: purple;
+            text-align: left;
+        }
+        .comment-box
+        {
+            max-width: 60vw;
+            display: flex;
+    
+            .comment-left{
+                width: 20%;
+                padding-right: 2rem;
+                text-align: right;
+            }
+
+
+            .comment-right{
+                width: 70%
+            }
+
+        }
+    }
+}

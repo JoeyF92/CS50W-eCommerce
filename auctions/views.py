@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, Listing, Bid, Watchlist
+from .models import User, Listing, Bid, Watchlist, Comment
 from .forms import NewListingForm, NewBidForm, CommentForm
 
 @login_required
@@ -29,7 +29,18 @@ def new_listing(request):
         return render(request, "auctions/new_listing.html", context)
 
 def index(request):
-    listings = Listing.objects.all()
+    #extract all listings
+    listings = list(Listing.objects.all().values())
+    #loop over listings, find and append current price
+    for listing in listings:
+        #find last bid, if there is one
+        current_bid = Bid.objects.filter(listing = listing['id']).values().last()
+        if current_bid:
+            listing['current_bid'] = current_bid['bid_amount']
+        #if there's not we'll use the starting price
+        if not current_bid:
+            starting_bid = Listing.objects.filter(pk=listing['id']).values()
+            listing['starting_bid'] = starting_bid = starting_bid[0]['starting_bid']
     context = {'listings': listings}
     return render(request, "auctions/index.html", context)
 
@@ -113,9 +124,22 @@ def listing(request, listing_id):
         comment_form = CommentForm()
         context['form'] = form
         context['comment_form'] = comment_form
+        #extract the comments for the listing so we can render on the page
+        comments = Comment.objects.filter(listing = Listing.objects.get(pk=listing_id)).values().distinct()
+        # loop over the comments and add the username on it 
+        for i in range(len(comments)):
+            #extract username where user_id = x
+            username = User.objects.get(id=comments[i]['user_id'])
+            comments[i]['username'] = username
+        context['comments'] = comments
+        #check if user is the owner of the listing. If none returns - we can use that as logic on page
+        is_owner = Listing.objects.filter(id = listing_id, owner_id = request.user).values()
+        context['is_owner'] = is_owner
         return render(request, "auctions/listing.html", context)
 
-
+@login_required
+def end_auction(request, listing_id):
+    pass
 
 @login_required
 def watch(request, listing_id):
@@ -144,14 +168,13 @@ def comments(request, listing_id):
     if request.method == "POST":
         #extract comment form submitted by user
         form = CommentForm(request.POST)
-        print(form)
         if form.is_valid():
             #Saving with commit=False, so we can add to the model instance
             instance = form.save(commit=False)
             #add owner and listing to the commentform
             instance.user = request.user
             instance.listing = Listing.objects.get(pk=listing_id)
-            #instance.save()
+            instance.save()
             messages.success(request, "Comment Added")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
@@ -159,15 +182,6 @@ def comments(request, listing_id):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-
-
-        #extract listing
-        #insert into comments database
-        #redierecrt
-        pass
-    else:
-        #render auction listings page
-        return render(request, "auctions/index.html")
 
 @login_required 
 def watchlist(request):
@@ -182,8 +196,22 @@ def watchlist(request):
     context = {'listings': listings}
     return render(request, "auctions/watchlist.html", context)  
 
-
-
+@login_required
+def user_listings(request):
+    #extract what listings belong to the user logged in
+    listings = Listing.objects.filter(owner_id = request.user).values()
+    #loop over listings, find and append current price
+    for listing in listings:
+        #find last bid, if there is one
+        current_bid = Bid.objects.filter(listing = listing['id']).values().last()
+        if current_bid:
+            listing['current_bid'] = current_bid['bid_amount']
+        #if there's not we'll use the starting price
+        if not current_bid:
+            starting_bid = Listing.objects.filter(pk=listing['id']).values()
+            listing['starting_bid'] = starting_bid = starting_bid[0]['starting_bid']
+    context = {'listings': listings}
+    return render(request, "auctions/user_listings.html", context)
 
 
 def login_view(request):

@@ -38,5 +38,13 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = '__all__'
+        labels = {
+            "comment": ""
+        }
         exclude = ['user', 'listing', 'Timestamp']
-        
+        widgets = {            
+            'comment': TextInput(attrs={
+                'rows': "2",
+                }),
+        }
+    

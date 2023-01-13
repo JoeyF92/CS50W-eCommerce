@@ -144,4 +144,49 @@ form > select {
 }
 .bid input {
   width: 100%;
+}
+
+.all-comments {
+  margin-top: 2rem;
+  text-align: left;
+  width: 60vw;
+}
+.all-comments form {
+  width: 95%;
+  height: 10px;
+  margin-left: 0;
+  position: relative;
+}
+.all-comments form #id_comment {
+  padding-right: 1rem;
+}
+.all-comments form button {
+  color: blue;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.all-comments #id_comment {
+  width: 100%;
+}
+.all-comments .comment-group {
+  width: 60vw;
+}
+.all-comments .comment-group .comment-time {
+  font-size: 0.6rem;
+  color: #8d8d8d;
+  color: purple;
+  text-align: left;
+}
+.all-comments .comment-group .comment-box {
+  max-width: 60vw;
+  display: flex;
+}
+.all-comments .comment-group .comment-box .comment-left {
+  width: 20%;
+  padding-right: 2rem;
+  text-align: right;
+}
+.all-comments .comment-group .comment-box .comment-right {
+  width: 70%;
 }/*# sourceMappingURL=styles.css.map */

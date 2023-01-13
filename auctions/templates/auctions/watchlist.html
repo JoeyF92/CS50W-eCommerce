@@ -2,14 +2,6 @@
 
 {% block body %}
 
-{% if messages %}
-    {% for message in messages %}
-        <div class={{message.tags}}>
-            {{message}}
-        </div>
-    {% endfor %}
-{% endif %}
-
 <h3> Your watched items </h3>
 
 {% for listing in listings reversed  %}
@@ -39,5 +31,10 @@
         </div>
     {% endif %}
 {% endfor %} 
+
+
+
+
+
 
 {% endblock %}

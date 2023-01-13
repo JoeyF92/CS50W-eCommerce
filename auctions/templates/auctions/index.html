@@ -15,8 +15,12 @@
                 </div>
                 <div class="listing-right">
                     <h3> {{listing.title}} </h3>
-                    <a href="{% url 'listing' listing_id=listing.id %}"> {{listing.title}} </a>
-                    <p> Current Price: $ </p>
+                    <a href="{% url 'listing' listing_id=listing.id %}"> Go to listing </a>
+                    {% if listing.current_bid %}
+                        <p> Current Bid: ${{listing.current_bid}} </p>
+                    {% else %}
+                        <p> Starting at: ${{listing.starting_bid}} </p>
+                    {% endif %}
                     <p class="created-text"> Created: {{listing.date}} </p>
                     
                     

@@ -26,6 +26,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'watchlist' %}"> Watched Items </a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'user_listings' %}"> Your Listings </a>
+            </li>
+
             {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -40,8 +45,17 @@
                 
             {% endif %}
         </ul>
-        <hr>
-        {% block body %}
+            <hr>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class={{message.tags}}>
+                        {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        
+            {% block body %}
+        
         {% endblock %}
     </body>
 </html>
