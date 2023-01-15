@@ -7,6 +7,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import User, Listing, Bid, Watchlist, Comment
 from .forms import NewListingForm, NewBidForm, CommentForm
+from django.db.models import Q
+
 
 @login_required
 def new_listing(request):
@@ -30,7 +32,7 @@ def new_listing(request):
 
 def index(request):
     #extract all listings
-    listings = list(Listing.objects.all().values())
+    listings = list(Listing.objects.filter(is_active = True).values())
     #loop over listings, find and append current price
     for listing in listings:
         #find last bid, if there is one
@@ -137,9 +139,10 @@ def listing(request, listing_id):
         context['is_owner'] = is_owner
         return render(request, "auctions/listing.html", context)
 
-@login_required
-def end_auction(request, listing_id):
-    pass
+
+#do a page for won auctions -'your purchases'
+
+
 
 @login_required
 def watch(request, listing_id):
@@ -180,6 +183,58 @@ def comments(request, listing_id):
         else:
             messages.error(request, "Error with comment submission")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def end_auction(request, listing_id):
+    # check user is the owner
+    is_owner = Listing.objects.filter(id = listing_id, owner_id = request.user)
+    if not is_owner:
+        messages.error(request, "You don't have permission to do that")
+        return HttpResponseRedirect('/listing/' + listing_id)
+    finished_auction = Listing.objects.get(id = listing_id)
+    #extract last bid (if there is one) - and who was the bidder
+    try:
+        last_bid = Bid.objects.filter(listing = Listing.objects.get(pk=listing_id)).latest('Timestamp')
+    except:
+        messages.info(request, "Completed Listing as unsold")
+    else:
+        #add winner id and winning bid to the listing
+        finished_auction.winning_bid = last_bid.bid_amount
+        finished_auction.winner_id = last_bid.user_id
+        messages.success(request, "Auction complete")
+    finally:
+        # change the listing to inactive and save
+        finished_auction.is_active = False
+        finished_auction.save()
+        return HttpResponseRedirect('/listing/' + listing_id)
+
+
+#next up - remove unactive listings, clean up styles, maybe have reactivate listing option.
+
+
+@login_required
+def bought_items(request):
+    #look in listing for items where winner id = x
+    bought_items = Listing.objects.filter(winner_id = request.user.id)
+    context = {'listings': bought_items}
+    #pull info together and render to page
+    return render(request, "auctions/bought_items.html", context) 
+
+
+@login_required
+def past_listings(request):
+    #look in listings for items where is_active is false, and listing owner is the current user
+    unsold_listings = Listing.objects.filter(is_active = False, owner_id = request.user, winning_bid = None)
+    #for sold items i use a Q object - which returns all entries except those with a winning bid of None
+    sold_listings = Listing.objects.filter(is_active = False, owner_id = request.user).filter(~Q (winning_bid = None))
+    context = {'unsold_listings': unsold_listings}
+    context['sold_listings'] = sold_listings
+    #pull info together and render to page
+    return render(request, "auctions/past_listings.html", context) 
+
+
 
 
 
@@ -264,3 +319,5 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+

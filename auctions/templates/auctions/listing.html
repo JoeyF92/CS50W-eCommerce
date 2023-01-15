@@ -41,7 +41,12 @@
                 <button type="submit">Bid</button>
             </form>
         {% else %}
-            <p> End the auction? </p>
+            <p> Click complete to end the auction </p>
+            <form action={% url 'end_auction' listing_id=listing.id %} method="post">
+                {% csrf_token %}
+                <button type="submit"> Complete </button>
+            </form>
+          
         {% endif %}
 
     </div>
@@ -71,6 +76,7 @@
             <button type="submit">Comment</button>
         </form>
     </div>
+
 
 
 

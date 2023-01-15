@@ -1,0 +1,53 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2> Your sold items: </h2>
+
+    {% for listing in sold_listings  reversed  %}
+    <div class="listing-box">
+        <div class="listing-left">
+            {% if listing.image != "" %}
+                <img src="{{listing.image}}" alt="image of {{listing.title}}">
+            {% else %}
+            <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.GhK0xqhcPT0DVriwmC4wOAHaHa%26pid%3DApi&f=1&ipt=c5cf3b950e88b3b956d61bc4824812e7b2e17fc237cdf68b5b92178d407b2a47&ipo=images.jpg" alt="image of {{listing.title}}">
+            {% endif %}
+        </div>
+        <div class="listing-right">
+            <h3> {{listing.title}} </h3>
+            <a href="{% url 'listing' listing_id=listing.id %}"> Go to listing </a>
+            <p> Bought for: ${{listing.winning_bid}} </p>
+            <p class="created-text"> Listed: {{listing.date}} </p>
+            
+            
+        </div>
+    </div>
+
+    {% endfor %}
+
+
+    <h2> Previous Unsold Listings: </h2>
+
+    {% for listing in unsold_listings reversed  %}
+        <div class="listing-box">
+            <div class="listing-left">
+                {% if listing.image != "" %}
+                    <img src="{{listing.image}}" alt="image of {{listing.title}}">
+                {% else %}
+                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.GhK0xqhcPT0DVriwmC4wOAHaHa%26pid%3DApi&f=1&ipt=c5cf3b950e88b3b956d61bc4824812e7b2e17fc237cdf68b5b92178d407b2a47&ipo=images.jpg" alt="image of {{listing.title}}">
+                {% endif %}
+            </div>
+            <div class="listing-right">
+                <h3> {{listing.title}} </h3>
+                <a href="{% url 'listing' listing_id=listing.id %}"> Go to listing </a>
+                <p> Listed at: ${{listing.starting_bid}} </p>
+                <p class="created-text"> Listed: {{listing.date}} </p>
+                
+                
+            </div>
+        </div>
+
+    {% endfor %}
+
+
+{% endblock %}
