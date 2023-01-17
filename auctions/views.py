@@ -71,7 +71,6 @@ def listing(request, listing_id):
             else:
                 #extract users bid as a new bid form
                 form = NewBidForm(request.POST)
-                print(form)
                 if form.is_valid():
                     #Saving with commit=False to get model object- and then appending the extra data
                     instance = form.save(commit=False)
@@ -79,7 +78,6 @@ def listing(request, listing_id):
                     instance.user = request.user
                     #add listing instance to the form
                     instance.listing = Listing.objects.get(pk=listing_id)
-                    print(instance)
                     #save form to database
                     instance.save()
                     messages.success(request, "Successfully Bid")
@@ -211,9 +209,6 @@ def end_auction(request, listing_id):
         return HttpResponseRedirect('/listing/' + listing_id)
 
 
-#next up - remove unactive listings, clean up styles, maybe have reactivate listing option. Think about hiding certain parts - depending on if logged in, or if they've ever listed something/bought etc
-
-
 @login_required
 def bought_items(request):
     #look in listing for items where winner id = x
@@ -233,10 +228,6 @@ def past_listings(request):
     context['sold_listings'] = sold_listings
     #pull info together and render to page
     return render(request, "auctions/past_listings.html", context) 
-
-
-
-
 
 @login_required 
 def watchlist(request):
