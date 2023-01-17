@@ -22,7 +22,8 @@ def new_listing(request):
             instance.owner_id = request.user
             #save form to database
             instance.save()
-            return render(request, "auctions/index.html") 
+            #render the new listing page - using the items id
+            return HttpResponseRedirect('/listing/' + str(instance.pk))
         else:
             return new_listing(request)
     else:
