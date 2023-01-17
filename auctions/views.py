@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, Listing, Bid, Watchlist, Comment
+from .models import User, Listing, Bid, Watchlist, Comment, Category
 from .forms import NewListingForm, NewBidForm, CommentForm
 from django.db.models import Q
 
@@ -137,10 +137,10 @@ def listing(request, listing_id):
         #check if user is the owner of the listing. If none returns - we can use that as logic on page
         is_owner = Listing.objects.filter(id = listing_id, owner_id = request.user).values()
         context['is_owner'] = is_owner
+        #check if listing is complete -so we can dictate logic on the page
+        #context['has_ended'] = 
+        #check if user is the highest bidder/ winner? of the auction 
         return render(request, "auctions/listing.html", context)
-
-
-#do a page for won auctions -'your purchases'
 
 
 
@@ -211,7 +211,7 @@ def end_auction(request, listing_id):
         return HttpResponseRedirect('/listing/' + listing_id)
 
 
-#next up - remove unactive listings, clean up styles, maybe have reactivate listing option.
+#next up - remove unactive listings, clean up styles, maybe have reactivate listing option. Think about hiding certain parts - depending on if logged in, or if they've ever listed something/bought etc
 
 
 @login_required
@@ -246,15 +246,16 @@ def watchlist(request):
     listings = []
     for i in range(len(items)):
         input_id = items[i]['listing_id']
-        item = Listing.objects.filter(id = items[i]['listing_id']).values()
-        listings.append(item[0])
+        item = Listing.objects.filter(id = items[i]['listing_id']).filter(is_active = True).values()
+        if item:
+            listings.append(item[0])
     context = {'listings': listings}
     return render(request, "auctions/watchlist.html", context)  
 
 @login_required
 def user_listings(request):
     #extract what listings belong to the user logged in
-    listings = Listing.objects.filter(owner_id = request.user).values()
+    listings = Listing.objects.filter(owner_id = request.user).filter(is_active = True).values()
     #loop over listings, find and append current price
     for listing in listings:
         #find last bid, if there is one
@@ -267,6 +268,23 @@ def user_listings(request):
             listing['starting_bid'] = starting_bid = starting_bid[0]['starting_bid']
     context = {'listings': listings}
     return render(request, "auctions/user_listings.html", context)
+
+
+def categories(request, category):
+    if category == 'all':
+        categories = Category.objects.all()
+        context = { 'categories': categories}
+        return render(request, "auctions/categories.html", context)
+    else:
+        category = Category.objects.filter(name = category)
+        category = category[0]
+        items = Listing.objects.filter(category = category).filter(is_active = True)
+        context = { 'listings': items}
+        context['category'] = category
+    return render(request, "auctions/categories.html", context)
+
+
+
 
 
 def login_view(request):

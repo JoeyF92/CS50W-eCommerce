@@ -189,4 +189,24 @@ form > select {
 }
 .all-comments .comment-group .comment-box .comment-right {
   width: 70%;
+}
+
+.new_listing {
+  margin-left: 0;
+  text-align: left;
+  font-weight: bold;
+  font-size: 1.1rem;
+  max-width: 60vw;
+}
+.new_listing input {
+  width: 12rem;
+  margin-left: 1rem;
+}
+.new_listing select {
+  margin-left: 1rem;
+  width: 12rem;
+}
+.new_listing button {
+  margin-left: 40%;
+  width: 10rem;
 }/*# sourceMappingURL=styles.css.map */

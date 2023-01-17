@@ -3,7 +3,7 @@
 {% block body %}
 
 
-<form action="{% url 'new_listing' %}" method="post">
+<form class="new_listing" action="{% url 'new_listing' %}" method="post">
     {% csrf_token %}
     {{form}}
     <button type="submit" class="btn btn-light">Create</button>
