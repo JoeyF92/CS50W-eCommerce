@@ -25,5 +25,5 @@ This was a project to create a mock version of ebay - it had to meet the followi
 **Categories:**
 - Users should be able to visit a page that displays a list of all listing categories. Clicking on the name of any category should take the user to a page that displays all of the active listings in that category.
 
-** Django Admin Interface: **
+**Django Admin Interface:**
 - Via the Django admin interface, a site administrator should be able to view, add, edit, and delete any listings, comments, and bids made on the site.
