@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# this gives us the path of manage.pys folder, so django knows where it is
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -20,16 +21,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+#this is unique to your specific project
 SECRET_KEY = '6ps8j!crjgrxt34cqbqn7x&b3y%(fny8k8nh21+qa)%ws3fh!q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#when bringing into live production - turn this to false
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
 
 # Application definition
-
+#where you build your app - ie the components of your project, like a blog
 INSTALLED_APPS = [
     'auctions',
     'django.contrib.admin',
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+#how requests and security etc handled
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -50,8 +54,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+#how django knows how to route any given url
 ROOT_URLCONF = 'commerce.urls'
 
+#where templates are stored, how they work etc
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -68,12 +74,14 @@ TEMPLATES = [
     },
 ]
 
+#how the server works
 WSGI_APPLICATION = 'commerce.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+#how django maps to databases - you can change where its located etc here. the default is below
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -83,7 +91,7 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'auctions.User'
 
-# Password validation
+# Password validation - ensures passwords are to current standards
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -116,7 +124,13 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images) - where you store images , js etc
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# where to redirect if the login authenticator fails
+LOGIN_URL = '/login'

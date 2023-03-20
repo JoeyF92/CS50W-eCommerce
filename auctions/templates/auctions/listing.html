@@ -1,0 +1,124 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+
+    <div class="listed">
+        <h2> Listing: {{listing.title}} </h2>
+        {% if not is_owner %}
+            {% if watched %}
+                <form action="{% url 'watch' listing_id=listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{listing}}">
+                    <button type="submit" name="unwatch"> Unwatch </button>
+                </form>
+            {% else %}
+                <form action="{% url 'watch' listing_id=listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{listing}}">
+                    <button type="submit" name="watch"> Watch </button>
+                </form>
+            {% endif %}
+        {% endif %}        
+        <img src="{{listing.image}}" alt="{{listing.title}} image">
+        <p>{{listing.description}}</p>
+        
+    </div>
+    <!-- If the listing is live -->
+    {% if listing.is_active %}
+        <div class="bid">
+            {% if current_bid %}
+                <h6> Current Bid</h6>
+                <p> $ {{current_bid}} </p>
+            {% else %}
+                <h6> Bidding starts at: </h6>
+                <p> ${{minimum_bid}} </p>
+            {% endif %}
+
+            {% if not is_owner %}
+                <form action={% url 'listing' listing_id=listing.id %} method="post">
+                    {% csrf_token %}
+                    {{form}}
+                    <button type="submit">Bid</button>
+                </form>
+            {% else %}
+                <p> Click complete to close the auction </p>
+                <form action={% url 'end_auction' listing_id=listing.id %} method="post">
+                    {% csrf_token %}
+                    <button type="submit"> Complete </button>
+                </form>
+            
+            {% endif %}
+
+        </div>
+    
+    {% else %}
+    <!-- if the listing is complete -->
+        <div class="bid">
+            {% if current_bid %}
+                <h6> Sold for: </h6>
+                <p> ${{current_bid}} </p>
+            {% else %}
+                <h6> Item didn't sell </h6>
+                <p> Listed at ${{minimum_bid}} </p>
+            {% endif %}
+
+            {% if not is_owner %}
+                {% if is_winner %}
+                    <p> <strong>You won this item </p>
+                {% else %}
+                    <p> <strong>You Didn't win this item </p>    
+                {% endif %}
+            {% else %}
+                <p> <strong>This is your listing </strong> </p>
+            
+            {% endif %}
+
+        </div>
+
+
+
+
+    
+    {% endif %}
+
+    
+
+
+
+
+
+
+
+
+
+    <div class="all-comments">
+        {% for comment in comments %}
+            <div class="comment-group">
+                <p class="comment-time"> {{comment.Timestamp}} </p>
+                <div class="comment-box">
+            
+                    <div class="comment-left">
+
+                        <p> {{comment.username}} : </p>
+
+                    </div>
+                    
+                    <div class="comment-right">
+                        <p> {{comment.comment}} </p>
+                    
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <form action={% url 'comments' listing_id=listing.id %} method="post">
+            {% csrf_token %}
+            {{comment_form}}
+            <button type="submit">Comment</button>
+        </form>
+    </div>
+
+
+
+
+{% endblock %}
